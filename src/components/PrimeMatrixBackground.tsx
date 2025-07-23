@@ -20,7 +20,7 @@ const CHEEKY_EMOJIS = ['😏', '🤓', '🧮', '✨', '🎯', '💫', '🚀', '�
 export default function PrimeMatrixBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dropletsRef = useRef<PrimeDroplet[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const lastEmojiTime = useRef<number>(0);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
