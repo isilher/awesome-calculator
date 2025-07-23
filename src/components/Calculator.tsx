@@ -166,9 +166,11 @@ const Calculator: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       p: 2,
+      position: 'relative',
+      zIndex: 1,
       background: (theme) => theme.palette.mode === 'dark' 
-        ? 'linear-gradient(135deg, #0c4a6e 0%, #1e293b 100%)'
-        : 'linear-gradient(135deg, #e0f2fe 0%, #f8fafc 100%)',
+        ? 'linear-gradient(135deg, rgba(12, 74, 110, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%)'
+        : 'linear-gradient(135deg, rgba(224, 242, 254, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%)',
     }}>
       <Container maxWidth="sm">
         <Box sx={{ textAlign: 'center', mb: 4 }}>
