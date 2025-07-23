@@ -136,6 +136,11 @@ This awesome calculator was built in **minutes** using [Claude Code](https://cla
 - Beautiful components from [Material UI](https://mui.com/)
 - Icons from [Material Design Icons](https://mui.com/material-ui/material-icons/)
 
+## 👥 Contributors
+
+- **[Nicole Kuong](https://github.com/nicolekuong)** - Project collaboration and insights
+- **[Claude Code](https://claude.ai/code)** - AI development assistant
+
 ---
 
 **Made with ❤️ and AI magic** ✨
