@@ -61,3 +61,7 @@ src/
 - Button grid uses CSS Grid with responsive layout (4 columns, special handling for "0" button)
 - Theme detection happens automatically on component mount
 - All styling uses Material UI's `sx` prop with theme-aware values
+
+## Commit Guidelines
+
+- Always start commits with an emoji and a unique prime number
