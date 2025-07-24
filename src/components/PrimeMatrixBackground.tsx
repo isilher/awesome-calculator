@@ -138,7 +138,7 @@ export default function PrimeMatrixBackground() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [dimensions]);
+  }, [dimensions, theme.palette.mode]);
 
   if (!isMounted) {
     return null;

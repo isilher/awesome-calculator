@@ -1,51 +1,75 @@
 # 🧮 Awesome Calculator
 
-A beautiful, modern calculator built with Next.js and Material UI that makes math fun with **prime number badges**! ✨
+An advanced calculator application built with Next.js 15 and React 19, featuring a unique **prime number badge collection system**, beautiful Material UI design, and animated matrix background.
 
-![Calculator Preview](https://img.shields.io/badge/Built%20with-Next.js%2015-black?style=flat-square&logo=next.js)
-![Material UI](https://img.shields.io/badge/UI-Material%20UI-blue?style=flat-square&logo=mui)
-![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue?style=flat-square&logo=typescript)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Calculator Preview](https://via.placeholder.com/800x400?text=Awesome+Calculator+Preview)
 
 ## ✨ Features
 
-### 🎯 **Core Functionality**
-- ➕ **Full Calculator** - Addition, subtraction, multiplication, division
-- 🧮 **Professional UI** - Clean, intuitive interface with perfect button alignment
-- 📱 **Responsive Design** - Works beautifully on desktop, tablet, and mobile
+### 🔢 Core Calculator Functions
+- **Basic Arithmetic**: Addition, subtraction, multiplication, division
+- **Advanced Operations**: Sign toggle (±), decimal support
+- **Clear Functions**: Clear all (C) and clear entry (CE)
+- **Chain Calculations**: Perform multiple operations in sequence
 
-### 🏆 **Unique Prime Badge System**
-- 🔢 **Prime Detection** - Automatically detects when calculation results are prime numbers
-- 🌟 **Badge Collection** - Collect and showcase every unique prime number you discover
-- 🎉 **Achievement Tracking** - Visual badge counter with beautiful dialog showcase
+### 🏆 Prime Number Badge Collection
+- **Automatic Detection**: Discovers prime numbers in calculation results
+- **Badge Collection**: Stores and displays collected prime numbers
+- **Persistent Storage**: Saves badges to localStorage
+- **Beautiful UI**: Animated dialog with badge showcase
 
-### 🎨 **Modern Design**
-- 🌓 **System Theme Detection** - Automatically adapts to light/dark mode preferences
-- ✨ **Smooth Animations** - Delightful hover effects and transitions
-- 💎 **Professional Styling** - Gradient backgrounds, shadows, and modern typography
-- 🎯 **Perfect Alignment** - OCD-friendly button grid layout
+### ⌨️ Keyboard Support
+- **Number Keys**: `0-9` for input
+- **Operators**: `+`, `-`, `*`, `/` for calculations
+- **Special Keys**:
+  - `Enter` or `=` to calculate
+  - `Escape` to clear all
+  - `Backspace` to clear entry
+  - `Ctrl+C` to copy result
 
-## 🚀 Quick Start
+### 🎨 User Experience
+- **Copy to Clipboard**: Click icon or use Ctrl+C to copy results
+- **Loading States**: Visual feedback for heavy calculations
+- **Responsive Design**: Works on desktop and mobile
+- **Dark/Light Theme**: Automatic system preference detection
+- **Smooth Animations**: Hover effects and transitions
+
+### 🌟 Visual Features
+- **Matrix Animation**: Falling prime numbers background
+- **Gradient Themes**: Beautiful color schemes for both modes
+- **Material UI**: Professional component library
+- **Custom Styling**: Theme-aware colors and effects
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
-- npm or yarn
+- npm or yarn package manager
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/[your-username]/awesome-calculator.git
-cd awesome-calculator
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd awesome-calculator
+   ```
 
-# Install dependencies
-npm install
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-# Start development server
-npm run dev
-```
+3. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-Visit `http://localhost:3000` to see your calculator in action! 🎉
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Build for Production
 
@@ -57,92 +81,136 @@ npm run build
 npm start
 ```
 
-## 🎮 How to Use
+## 🧪 Testing
 
-1. **Calculate Normally** - Use like any standard calculator
-2. **Discover Primes** - Try calculations like `2+1=3`, `5+2=7`, `11+0=11`
-3. **Collect Badges** - Click the badge counter to see your prime number collection
-4. **Enjoy Themes** - Switch your system theme to see the calculator adapt!
+### Run Tests
+```bash
+# Run all tests
+npm test
 
-## 🛠️ Technology Stack
+# Run tests in watch mode
+npm run test:watch
 
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
-- **[Material UI](https://mui.com/)** - React component library
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Emotion](https://emotion.sh/)** - CSS-in-JS styling
-- **[React 19](https://react.dev/)** - Latest React with modern features
+# Run tests with coverage
+npm run test:coverage
+```
 
-## 📁 Project Structure
+### Test Coverage
+The application includes comprehensive tests for:
+- ✅ Basic calculator operations
+- ✅ Prime number detection
+- ✅ UI interactions and button clicks
+- ✅ Edge cases (division by zero, invalid inputs)
+- ✅ Badge collection system
+
+## 🛠️ Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm test` - Run Jest tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate test coverage report
+
+### Project Structure
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout with theme provider
+│   ├── layout.tsx          # Root layout with theme and metadata
 │   ├── page.tsx            # Home page
-│   └── globals.css         # Global styles
-└── components/
-    ├── Calculator.tsx      # Main calculator component
-    └── ThemeRegistry.tsx   # Theme configuration and provider
+│   ├── globals.css         # Global styles
+│   ├── icon.tsx            # Favicon generator
+│   └── apple-icon.tsx      # Apple touch icon
+├── components/
+│   ├── Calculator.tsx      # Main calculator component
+│   ├── ThemeRegistry.tsx   # Material UI theme provider
+│   ├── PrimeMatrixBackground.tsx # Animated background
+│   └── __tests__/
+│       └── Calculator.test.tsx   # Test suite
+├── jest.config.js          # Jest configuration
+├── jest.setup.js           # Test setup
+└── package.json            # Dependencies and scripts
 ```
 
-## 🎨 Key Features Deep Dive
+## 🎯 Technical Stack
 
-### Prime Number Detection Algorithm
-```typescript
-const isPrime = (num: number): boolean => {
-  if (num < 2) return false;
-  if (num === 2) return true;
-  if (num % 2 === 0) return false;
-  
-  for (let i = 3; i <= Math.sqrt(num); i += 2) {
-    if (num % i === 0) return false;
-  }
-  return true;
-};
-```
+### Core Technologies
+- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
+- **[React 19](https://react.dev/)** - Latest React with modern features
+- **[TypeScript 5](https://www.typescriptlang.org/)** - Type safety and developer experience
 
-### Responsive Button Grid
-- **Perfect Alignment** - CSS Grid ensures pixel-perfect button positioning
-- **Professional Spacing** - Consistent 12px gaps between all elements
-- **Touch-Friendly** - 70px button height optimal for mobile interaction
+### UI & Styling
+- **[Material UI 7](https://mui.com/)** - React component library
+- **[Emotion](https://emotion.sh/)** - CSS-in-JS styling
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS
 
-### System Theme Integration
-- **Automatic Detection** - Uses `prefers-color-scheme` media query
-- **Dynamic Colors** - Separate color palettes for light and dark modes
-- **Smooth Transitions** - Seamless theme switching without flicker
+### Development Tools
+- **[Jest](https://jestjs.io/)** - Testing framework
+- **[React Testing Library](https://testing-library.com/)** - Component testing
+- **[ESLint 9](https://eslint.org/)** - Code linting
+- **[Turbopack](https://turbo.build/pack)** - Fast development builds
+
+## 🔧 Configuration
+
+### Theme Customization
+The app automatically detects system theme preference. Themes can be customized in `src/components/ThemeRegistry.tsx`.
+
+### Prime Number Algorithm
+Located in `Calculator.tsx:30-39`, optimized for performance with square root limit checking.
+
+### Local Storage
+Prime numbers are automatically saved to `localStorage` under the key `calculator-primes`.
+
+## 📱 Responsive Design
+
+The calculator is fully responsive and works on:
+- 📱 Mobile devices (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktop computers (1024px+)
+- 🖥️ Large screens (1920px+)
+
+## 🔒 Browser Support
+
+- ✅ Chrome 88+
+- ✅ Firefox 85+
+- ✅ Safari 14+
+- ✅ Edge 88+
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m '✨ Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📝 License
+### Commit Guidelines
+Follow the project's commit convention:
+- Always start commits with an emoji and a unique prime number
+- Example: `✨ 137 Add keyboard shortcuts support`
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🎯 About
+## 🙏 Acknowledgments
 
-This awesome calculator was built in **minutes** using [Claude Code](https://claude.ai/code) - showcasing the power of AI-assisted development! 🤖✨
+- Built with ❤️ using Claude Code
+- Material UI for the beautiful component library
+- Next.js team for the amazing framework
+- The React community for continuous innovation
 
-**What makes this special:**
-- 🚀 **Rapid Development** - From concept to production-ready app in minutes
-- 🎨 **Professional Design** - No compromises on visual quality or UX
-- 🧠 **Smart Features** - Prime number detection adds educational value
-- 📱 **Modern Standards** - Latest Next.js, TypeScript, and Material UI
+## 📞 Support
 
-## 🌟 Acknowledgments
-
-- Built with the amazing [Claude Code](https://claude.ai/code) AI assistant
-- Powered by the incredible [Next.js](https://nextjs.org/) framework
-- Beautiful components from [Material UI](https://mui.com/)
-- Icons from [Material Design Icons](https://mui.com/material-ui/material-icons/)
-
-## 👥 Contributors
-
-- **[Nicole Kuong](https://github.com/NicoleKuong)** - Project collaboration and insights
-- **[Claude Code](https://claude.ai/code)** - AI development assistant
+If you encounter any issues or have questions:
+1. Check the [Issues](https://github.com/your-repo/awesome-calculator/issues) page
+2. Create a new issue with a detailed description
+3. Include steps to reproduce any bugs
 
 ---
 
-**Made with ❤️ and AI magic** ✨
-
-*Found a prime number? Share it with the world! #AwesomeCalculator #PrimeNumbers*
+**Made with ❤️ and prime numbers** 🔢✨

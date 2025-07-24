@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Button,
@@ -16,8 +16,12 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  IconButton,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
-import { EmojiEvents, Star } from '@mui/icons-material';
+import { EmojiEvents, Star, ContentCopy } from '@mui/icons-material';
 
 const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('0');
@@ -26,6 +30,29 @@ const Calculator: React.FC = () => {
   const [waitingForNewValue, setWaitingForNewValue] = useState(false);
   const [primeNumbers, setPrimeNumbers] = useState<Set<number>>(new Set());
   const [showBadges, setShowBadges] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [copyError, setCopyError] = useState(false);
+
+  // Load prime numbers from localStorage on component mount
+  useEffect(() => {
+    const storedPrimes = localStorage.getItem('calculator-primes');
+    if (storedPrimes) {
+      try {
+        const primesArray = JSON.parse(storedPrimes);
+        setPrimeNumbers(new Set(primesArray));
+      } catch (error) {
+        console.error('Error loading stored primes:', error);
+      }
+    }
+  }, []);
+
+  // Save prime numbers to localStorage whenever they change
+  useEffect(() => {
+    if (primeNumbers.size > 0) {
+      localStorage.setItem('calculator-primes', JSON.stringify(Array.from(primeNumbers)));
+    }
+  }, [primeNumbers]);
 
   const isPrime = (num: number): boolean => {
     if (num < 2) return false;
@@ -38,22 +65,30 @@ const Calculator: React.FC = () => {
     return true;
   };
 
-  const checkForPrime = (result: number) => {
+  const checkForPrime = useCallback(async (result: number) => {
+    if (result > 1000000) {
+      setIsCalculating(true);
+      // Simulate delay for large number prime checking
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
     if (isPrime(result) && result > 1) {
       setPrimeNumbers(prev => new Set([...prev, result]));
     }
-  };
+    
+    setIsCalculating(false);
+  }, []);
 
-  const inputNumber = (num: string) => {
+  const inputNumber = useCallback((num: string) => {
     if (waitingForNewValue) {
       setDisplay(num);
       setWaitingForNewValue(false);
     } else {
       setDisplay(display === '0' ? num : display + num);
     }
-  };
+  }, [display, waitingForNewValue]);
 
-  const inputOperation = (nextOperation: string) => {
+  const inputOperation = useCallback(async (nextOperation: string) => {
     const inputValue = parseFloat(display);
 
     if (previousValue === null) {
@@ -64,12 +99,12 @@ const Calculator: React.FC = () => {
       
       setDisplay(String(newValue));
       setPreviousValue(newValue);
-      checkForPrime(newValue);
+      await checkForPrime(newValue);
     }
 
     setWaitingForNewValue(true);
     setOperation(nextOperation);
-  };
+  }, [display, previousValue, operation, checkForPrime]);
 
   const calculate = (firstValue: number, secondValue: number, operation: string): number => {
     switch (operation) {
@@ -86,7 +121,7 @@ const Calculator: React.FC = () => {
     }
   };
 
-  const performCalculation = () => {
+  const performCalculation = useCallback(async () => {
     const inputValue = parseFloat(display);
 
     if (previousValue !== null && operation) {
@@ -95,20 +130,20 @@ const Calculator: React.FC = () => {
       setPreviousValue(null);
       setOperation(null);
       setWaitingForNewValue(true);
-      checkForPrime(newValue);
+      await checkForPrime(newValue);
     }
-  };
+  }, [display, previousValue, operation, checkForPrime]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setDisplay('0');
     setPreviousValue(null);
     setOperation(null);
     setWaitingForNewValue(false);
-  };
+  }, []);
 
-  const clearEntry = () => {
+  const clearEntry = useCallback(() => {
     setDisplay('0');
-  };
+  }, []);
 
   const buttons = [
     ['C', 'CE', '±', '÷'],
@@ -129,7 +164,7 @@ const Calculator: React.FC = () => {
     return 'outlined';
   };
 
-  const handleButtonClick = (button: string) => {
+  const handleButtonClick = async (button: string) => {
     switch (button) {
       case 'C':
         clearAll();
@@ -138,13 +173,13 @@ const Calculator: React.FC = () => {
         clearEntry();
         break;
       case '=':
-        performCalculation();
+        await performCalculation();
         break;
       case '+':
       case '-':
       case '×':
       case '÷':
-        inputOperation(button);
+        await inputOperation(button);
         break;
       case '.':
         if (display.indexOf('.') === -1) {
@@ -158,6 +193,56 @@ const Calculator: React.FC = () => {
         inputNumber(button);
     }
   };
+
+  // Copy to clipboard functionality
+  const copyToClipboard = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(display);
+      setCopySuccess(true);
+    } catch {
+      setCopyError(true);
+    }
+  }, [display]);
+
+  // Keyboard support
+  const handleKeyPress = useCallback(async (event: KeyboardEvent) => {
+    const key = event.key;
+    
+    // Prevent default behavior for calculator keys
+    if ('0123456789+-*/.='.includes(key) || key === 'Enter' || key === 'Escape' || key === 'Backspace') {
+      event.preventDefault();
+    }
+    
+    if ('0123456789'.includes(key)) {
+      inputNumber(key);
+    } else if (key === '.') {
+      if (display.indexOf('.') === -1) {
+        inputNumber(key);
+      }
+    } else if (key === '+') {
+      await inputOperation('+');
+    } else if (key === '-') {
+      await inputOperation('-');
+    } else if (key === '*') {
+      await inputOperation('×');
+    } else if (key === '/') {
+      await inputOperation('÷');
+    } else if (key === '=' || key === 'Enter') {
+      await performCalculation();
+    } else if (key === 'Escape') {
+      clearAll();
+    } else if (key === 'Backspace') {
+      clearEntry();
+    } else if (event.ctrlKey && key === 'c') {
+      await copyToClipboard();
+    }
+  }, [display, inputNumber, inputOperation, performCalculation, clearAll, clearEntry, copyToClipboard]);
+
+  // Add keyboard event listener
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   return (
     <Box sx={{ 
@@ -232,24 +317,47 @@ const Calculator: React.FC = () => {
                 minHeight: '80px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.3)',
                 border: (theme) => theme.palette.mode === 'dark' 
                   ? '1px solid rgba(255,255,255,0.1)'
                   : '1px solid rgba(0,0,0,0.1)',
+                position: 'relative',
               }}
             >
-              <Typography 
-                variant="h4" 
-                component="div"
-                sx={{ 
-                  fontFamily: 'monospace',
-                  fontWeight: 600,
-                  textShadow: '0 0 10px rgba(255,255,255,0.3)',
-                }}
-              >
-                {display} ✨
-              </Typography>
+              {isCalculating && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={20} sx={{ color: 'rgba(255,255,255,0.7)' }} />
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Calculating...
+                  </Typography>
+                </Box>
+              )}
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-end' }}>
+                <Typography 
+                  variant="h4" 
+                  component="div"
+                  sx={{ 
+                    fontFamily: 'monospace',
+                    fontWeight: 600,
+                    textShadow: '0 0 10px rgba(255,255,255,0.3)',
+                  }}
+                >
+                  {display} ✨
+                </Typography>
+                <IconButton
+                  onClick={copyToClipboard}
+                  size="small"
+                  sx={{ 
+                    color: 'rgba(255,255,255,0.7)',
+                    '&:hover': { color: 'rgba(255,255,255,1)' }
+                  }}
+                  title="Copy result (Ctrl+C)"
+                >
+                  <ContentCopy fontSize="small" />
+                </IconButton>
+              </Box>
             </Box>
 
             <Box sx={{ display: 'grid', gap: 1.5 }}>
@@ -272,6 +380,7 @@ const Calculator: React.FC = () => {
                         color={getButtonColor(button)}
                         size="large"
                         onClick={() => handleButtonClick(button)}
+                        disabled={isCalculating}
                         sx={{
                           height: '70px',
                           fontSize: '1.4rem',
@@ -299,6 +408,13 @@ const Calculator: React.FC = () => {
             </Box>
           </CardContent>
         </Card>
+        
+        {/* Keyboard shortcuts help */}
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography variant="body2" sx={{ opacity: 0.7 }}>
+            ⌨️ Keyboard shortcuts: Numbers, +, -, *, /, Enter/=, Esc (clear), Backspace (clear entry), Ctrl+C (copy)
+          </Typography>
+        </Box>
       </Container>
 
       <Dialog 
@@ -392,6 +508,29 @@ const Calculator: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      
+      {/* Success/Error Snackbars */}
+      <Snackbar 
+        open={copySuccess} 
+        autoHideDuration={2000} 
+        onClose={() => setCopySuccess(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setCopySuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Result copied to clipboard! 📋
+        </Alert>
+      </Snackbar>
+      
+      <Snackbar 
+        open={copyError} 
+        autoHideDuration={3000} 
+        onClose={() => setCopyError(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setCopyError(false)} severity="error" sx={{ width: '100%' }}>
+          Failed to copy to clipboard 😔
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
